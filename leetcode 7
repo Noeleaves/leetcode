@@ -1,33 +1,22 @@
 class Solution {
-    public List<List<Integer>> threeSum(int[] nums) {
-        List<List<Integer>> ans = new ArrayList<List<Integer>>();
-            if(nums.length==0){
-            return ans;
+    public int reverse(int x) {
+        int i = 10;
+        int maxlength = 10;
+        double ans = 0;
+        int j = 0;
+        int signed = x>0?1:0;
+        for(j = 1;j<maxlength;j++){
+            if((x/i)==0)break;
+            int add = x%i;
+            x = x/i;
+            ans = ans*10+add;
         }
-        
-        Arrays.sort(nums);
-        for(int i = 0;i<nums.length-2;i++){
-            int temp = 0 - nums[i];
-            int j = i+1;
-            int k = nums.length-1;
-            while(j<k){
-                if(temp-nums[j]==nums[k]){
-                    List<Integer> list = new ArrayList<Integer>();
-                    list.add(nums[i]);
-                    list.add(nums[j]);
-                    list.add(nums[k]);
-                    ans.add(list);
-                    while (j < k && nums[j] == nums[j+1]) j++;
-                    while (j < k && nums[k] == nums[k-1]) k--;
-                    j++; k--;
-                } 
-                else if(temp-nums[j]>nums[k])j++;
-                else k--;
+        ans = ans*10+x%i;
+        if(j==10){
+            if(ans>Integer.MAX_VALUE || ans<Integer.MIN_VALUE){
+                return 0;
             }
-
-             while((i+1)<nums.length && nums[i]==nums[i+1] ) i++;
         }
-       
-        return ans;
+        return (int)ans;
     }
 }
