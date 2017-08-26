@@ -1,0 +1,15 @@
+class Solution {
+    public String convertToTitle(int n) {
+        if(n < 1) return "";
+        int i = (int)'A';
+        int temp = n;
+        String ans = "";
+        while(temp > 0) {
+            temp--;
+            ans = String.valueOf((char)(temp % 26 + i)) + ans;
+            temp = temp/26;
+        }
+//        ans = String.valueOf((char)(((temp-1)%26) + i)) + ans;
+        return ans;
+    }
+}
