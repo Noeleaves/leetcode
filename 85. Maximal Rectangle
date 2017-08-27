@@ -39,3 +39,4 @@ public int largestInLine(int[] height) {
     }
     return maxArea;
 }
+}
