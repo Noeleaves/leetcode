@@ -1,0 +1,20 @@
+class Solution {
+    public int[] plusOne(int[] digits) {
+        int len = digits.length;
+        if(len == 0) return new int[0];
+        int count = 1;
+        int i = len-1;
+        while(count == 1 && i>=0) {
+            digits[i] = digits[i]+count;
+            count = digits[i]/10;
+            digits[i] = digits[i]%10;
+            i--;
+        }
+        if(count == 1) {
+            int[] ans = new int[len+1];
+            ans[0] = count;
+            return ans;
+        }
+        return digits;
+    }
+}
