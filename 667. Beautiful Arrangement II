@@ -1,0 +1,20 @@
+class Solution {
+    public int[] constructArray(int n, int k) {
+        int[] ans = new int[n];
+        ans[0] = n;
+        int t = -1;
+        int j = k;
+        for(int i = 1;i < n; i++) {
+            if(j <= 0) {
+                k++;
+                ans[i] = n-k;
+            }
+            else{
+                ans[i] = ans[i-1] + j*t;
+                t=t*(-1);
+                j--;
+            }
+        }
+        return ans;
+    }
+}
