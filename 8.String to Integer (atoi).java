@@ -1,12 +1,24 @@
 class Solution {
-    public int maxProfit(int[] prices) {
-        if(prices == null || prices.length == 0) return 0;
-        int max = Integer.MIN_VALUE;
-        int min = Integer.MAX_VALUE;
-        for(int i = 0;i < prices.length; i++) {
-            min = Math.min(prices[i], min);
-            max = Math.max(prices[i] - min, max);
+    public int myAtoi(String str) {
+        if(str == null || str.length() == 0) return 0;
+        long ans = 0;
+        int count = 1;
+        str = str.trim();
+        for(int i = 0; i < str.length(); i++) {
+            char cur = str.charAt(i);
+            if(i == 0 && cur == '-') {
+                count = -1;
+            }else if(i == 0 && cur == '+'){
+                continue;
+            }else if(!Character.isDigit(cur)) {
+                break;
+            }else {
+                ans*=10;
+                ans += (cur - '0');
+                if(ans*count >= Integer.MAX_VALUE) return Integer.MAX_VALUE;
+                if(ans*count <= Integer.MIN_VALUE) return Integer.MIN_VALUE;
+            }
         }
-        return max;
+        return (int) ans*count;
     }
 }
