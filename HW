@@ -9,9 +9,10 @@ const bit<16> ETH_TYPE_IPV4 = 0x0800;
  */
 typedef bit<48> macAddr_typr;
 typedef bit<9> port_type;
+typedef bit<32> ip4Addr_type;
 
 header ethernet_t {
-    macAddr_type dst_addr;
+    macAddr_type dst_addr
     macAddr_type src_addr;
     bit<16> ether_type;
 }
@@ -30,12 +31,28 @@ header packet_out_header_t {
     port_type egress_port;
 }
 
+header ipv4_type {
+    bit<4>    version;
+    bit<4>    ihl;
+    bit<8>    diffserv;
+    bit<16>   totalLen;
+    bit<16>   identification;
+    bit<3>    flags;
+    bit<13>   fragOffset;
+    bit<8>    ttl;
+    bit<8>    protocol;
+    bit<16>   hdrChecksum;
+    ip4Addr_type srcAddr;
+    ip4Addr_type dstAddr;
+}
+
 /*
  * TODO: Define your header struture
  */
 
 struct headers_t{
     ethernet_t ethernet;
+    ipv4_type ipv4;
     packet_out_header_t packet_out;
     packet_in_header_t packet_in;
 }
@@ -55,6 +72,20 @@ parser c_parser(packet_in packet,
                   inout metadata_t meta,
                   inout standard_metadata_t standard_metadata) {
     state start {
+        transition parse_ethernet;
+    }
+
+    state parse_ethernet {
+        packet.extract(hdr.ethernet);
+        transition select(hdr.ethernet.etherType) {
+            TYPE_IPV4: parse_ipv4;
+            default: accept;
+        }
+    }
+
+    state parse_ipv4 {
+        packet.extract(hdr.ipv4);
+        transition accept;
     }
 }
 
@@ -69,6 +100,12 @@ control c_ingress(inout headers_t hdr,
 /*
  * TODO: Implement your own pipeline
  */
+    action forward(macAddr_t dstAddr, egressSpec_t port) {
+        standard_metadata.egress_spec = port;
+        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
+        hdr.ethernet.dstAddr = dstAddr;
+        hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
+    }
 
     action _drop(){
         mark_to_drop();
