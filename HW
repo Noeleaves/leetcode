@@ -10,6 +10,7 @@ const bit<16> ETH_TYPE_IPV4 = 0x0800;
 typedef bit<48> macAddr_typr;
 typedef bit<9> port_type;
 typedef bit<32> ip4Addr_type;
+typedef bit<9>  egressSpec_t;
 
 header ethernet_t {
     macAddr_type dst_addr
@@ -116,6 +117,7 @@ control c_ingress(inout headers_t hdr,
         
         }
         actions = {
+            forward;
             _drop;
         }
         default_action = _drop();
